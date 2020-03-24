@@ -70,7 +70,9 @@ public class Server
       }
       catch (IOException e)
       {
-        System.err.println("IO error occurred when attempting to accept a client - " + e.getMessage());
+        //Only show an error message if it didn't occur because of the server socket being closed by the shutdown hook
+        if (!serverSocket.isClosed())
+          System.err.println("IO error occurred when attempting to accept a client - " + e.getMessage());
       }
     }
   }
