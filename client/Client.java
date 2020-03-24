@@ -4,14 +4,25 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+/**
+ * Represents a client of the Poll network application
+ */
 public class Client
 {
+  /** Socket used to connect to the server */
   private Socket socket = null;
+  /** Writer stream to send data to the server */
   private PrintWriter writer = null;
+  /** Reader to get data from the server */
   private BufferedReader reader = null;
 
+  /** Specifies the port of the server */
   private final int SERVER_PORT = 7777;
 
+  /**
+   * Creates a Client object and instantiates the Socket and IO streams
+   */
   public Client()
   {
     try
@@ -35,19 +46,24 @@ public class Client
     }
   }
 
+  /**
+   * Sends the appropriate request (whether its to vote or show) to the server and prints the response
+   * 
+   * @param choice - the type of request to make, either choice = "show" or choice contains the poll option to vote for
+   */
   public void poll(String choice)
   { 
-    //Send request to the server and write response to the user
+    //Send request to the server and write response to the client
     try
     {
-      //send request to the server - either the user wants to be shown the current vote breakdown, or they
+      //send request to the server - either the client wants to be shown the current vote breakdown, or they
       //are voting for an option
       writer.println(choice);
 
       //Wait for server response and collect all the lines given
       String serverResponse = reader.lines().collect(Collectors.joining("\n"));
       
-      //Echo out the server response to the user
+      //Echo out the server response to the client
       System.out.println(serverResponse);
       
       //Close the IO streams and socket to server
@@ -61,6 +77,12 @@ public class Client
     }
   }
 
+  /**
+   * Does validation checking of the command line arguments, then creates a Client object and then
+   * runs poll.
+   * 
+   * @param args - Array of command line arguments
+   */
 	public static void main(String[] args)
 	{
     final String usage = "USAGE: 'java Client show' or 'java Client vote <option>'";
@@ -83,6 +105,11 @@ public class Client
     }
   }
   
+  /**
+   * Prints an error message to the error stream and closes the program
+   * 
+   * @param message the error message to print
+   */
   private static void error(String message)
   {
     System.err.println("ERROR: " + message);
